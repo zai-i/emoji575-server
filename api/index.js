@@ -18,6 +18,9 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   if (!req.query.keywords) {
     return res.send({error: 'You must provide keywords'})
   }
+  if (req.query.keywords.length > 5) {
+    return res.send({error: 'Too many keywords'})
+  }
   const options = {
     method: 'POST',
     headers: {
