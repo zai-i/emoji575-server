@@ -18,17 +18,18 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   if (!req.query.keywords) {
     return res.send({error: 'You must provide keywords'})
   }
-  if (req.query.keywords.length > 5) {
+  else if (req.query.keywords.split(',').length > 15) {
     return res.send({error: 'Too many keywords'})
   }
-  const options = {
+  else {
+    const options = {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       'X-RapidAPI-Key': process.env.RAPID_API_KEY,
       'X-RapidAPI-Host': process.env.RAPID_API_HOST,
     },
-    body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate one haiku from the following keywords: ${req.query.keywords}."}]}`,
+    body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.keywords}."}]}`,
   }
   try {
     const response = await fetch(process.env.RAPID_API_URL, options)
@@ -38,11 +39,12 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   catch (error) {
     console.error(error)
     return res.send(error)
+    }
   }
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`App listening on port ${port}`)
 })
 
 module.exports = app
