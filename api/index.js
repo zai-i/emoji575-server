@@ -4,13 +4,12 @@ const port = 3000
 const cors = require('cors')
 
 var corsOptions = {
-  origin: 'https://emoji575.zaiz.ai/api',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: ['https://emoji575.zaiz.ai', 'http://127.0.0.1:5173'],
+  optionsSuccessStatus: 200 
 }
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv-safe').config()
-  app.use(cors())
 }
 app.get('/', async (req, res) => {
   res.send('Emoji 575')
