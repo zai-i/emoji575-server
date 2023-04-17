@@ -3,15 +3,19 @@ const app = express()
 const port = 3000
 const cors = require('cors')
 
+var corsOptions = {
+  origin: 'https://emoji575.zaiz.ai/api',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv-safe').config();
   app.use(cors())
 }
 app.get('/', async (req, res) => {
-  res.send('idusdi')
+  res.send('Emoji 575')
 })
-
-app.get('/api', async (req, res) => {
+app.get('/api', cors(corsOptions), async (req, res) => {
   if (!req.query.keywords) {
     res.send({error: 'You must provide keywords'})
   }
