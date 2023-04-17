@@ -17,7 +17,7 @@ app.get('/', async (req, res) => {
 })
 app.get('/api', cors(corsOptions), async (req, res) => {
   if (!req.query.keywords) {
-    res.send({error: 'You must provide keywords'})
+    return res.send({error: 'You must provide keywords'})
   }
   const options = {
     method: 'POST',
@@ -31,11 +31,11 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   try {
     const response = await fetch(process.env.RAPID_API_URL, options)
     const json = await response.json()
-    res.send(json)
+    return res.send(json)
   }
   catch (error) {
     console.error(error)
-    res.send(error)
+    return res.send(error)
   }
 })
 
