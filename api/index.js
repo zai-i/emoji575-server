@@ -15,10 +15,10 @@ app.get('/', async (req, res) => {
   res.send('Emoji 575')
 })
 app.get('/api', cors(corsOptions), async (req, res) => {
-  if (!req.query.keywords) {
+  if (!req.query.text) {
     return res.send({error: 'You must provide keywords'})
   }
-  else if (req.query.keywords.split(',').length > 15) {
+  else if (req.query.text.split(',').length > 15) {
     return res.send({error: 'Too many keywords'})
   }
   else {
