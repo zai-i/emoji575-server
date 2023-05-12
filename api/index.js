@@ -29,7 +29,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       'X-RapidAPI-Key': process.env.RAPID_API_KEY,
       'X-RapidAPI-Host': process.env.RAPID_API_HOST,
     },
-    body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.keywords}."}]}`,
+    body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.text}."}]}`,
   }
   try {
     const response = await fetch(process.env.RAPID_API_URL, options)
