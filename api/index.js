@@ -45,7 +45,11 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     const response = await fetch(process.env.RAPID_API_URL, options);
     const json = await response.json();
     const haiku = smarten(json.choices[0].message.content);
-    return res.send(haiku)
+    return res.send(
+      {
+        "response_type": "in_channel",
+        "text": haiku
+      })
   }
   catch (error) {
     console.error(error)
