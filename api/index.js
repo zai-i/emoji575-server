@@ -44,7 +44,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   try {
     const response = await fetch(process.env.RAPID_API_URL, options);
     const json = await response.json();
-    const haiku = smarten(JSON.stringify(json.choices[0].message.content));
+    const haiku = smarten(JSON.stringify(json.choices[0].message.content.replace(/\n/g, '"\n"')));
     return res.send(haiku)
   }
   catch (error) {
