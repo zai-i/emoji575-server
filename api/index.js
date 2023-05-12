@@ -8,6 +8,16 @@ var corsOptions = {
   optionsSuccessStatus: 200 
 }
 
+const smarten = (string) => {
+  string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
+  string = string.replace(/'/g, '\u2019'); // closing singles & apostrophes
+  string = string.replace(/(^|[-\u2014/([{\u2018\s])"/g, '$1\u201c'); // opening doubles
+  string = string.replace(/"/g, '\u201d'); // closing doubles
+  string = string.replace(/--/g, '\u2014'); // em-dashes
+
+  return string;
+};
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv-safe').config()
 }
@@ -32,9 +42,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.text}."}]}`,
   }
   try {
-    const response = await fetch(process.env.RAPID_API_URL, options)
-    const json = await response.json()
-    return res.send(json)
+    const response = await fetch(process.env.RAPID_API_URL, options);
+    const json = await response.json();
+    const haiku = smarten(JSON.stringify(json.choices[0].message.content.replace(/\n/g, '<br>')));
+    return res.send(haiku)
   }
   catch (error) {
     console.error(error)
