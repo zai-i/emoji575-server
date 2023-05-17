@@ -92,7 +92,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     res.status(200).send(
       {
         "response_type": "ephemeral",
-        "text": "Generating a valid haiku..."
+        "text": ""
     })
     fetch(req.query.response_url,
       {
