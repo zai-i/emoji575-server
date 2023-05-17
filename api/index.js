@@ -17,7 +17,6 @@ function validate(text) {
     errored = true
   } else {
     lines.forEach((line, idx) => {
-      console.log(line, syl.countSyllables(line))
       // remove weird commas
       line = line.replace('’', '\'')
       const s = syl.countSyllables(line)
@@ -89,6 +88,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   try {
     const response = await retryRequest(process.env.RAPID_API_URL, options)
     const haiku = smarten(response)
+  
     if (!req.query.response_url) {
       res.send(haiku)
     }
@@ -102,7 +102,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         },
         body: JSON.stringify({
           "response_type": "in_channel",
-          "text": "Generating a valid haiku..."
+          "text": `${haiku}`
         })
       })
       fetch(req.query.response_url,
@@ -113,7 +113,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         },
         body: JSON.stringify({
           "response_type": "in_channel",
-          "text": `${haiku}`
+          "text": "Generating a valid haiku..."
         })
       })
     }
