@@ -96,7 +96,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       headers: {
         'content-type': 'application/json',
       },
-      body: `{"response_type": "in_channel", "text": "Generating a valid haiku..."}`,
+      body: {
+        "text": "Generating a valid haiku...",
+        "response_type": "in_channel"
+      }
     })
     fetch(req.query.response_url,
       {
@@ -104,7 +107,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       headers: {
         'content-type': 'application/json',
       },
-      body: `{"response_type": "in_channel", "text": "${haiku}"}`,
+      body: {
+        "text": `${haiku}`,
+        "response_type": "in_channel"
+      }
     })
   }
   catch (error) {
