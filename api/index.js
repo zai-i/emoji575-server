@@ -101,14 +101,22 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         },
         body: JSON.stringify({
           "response_type": "in_channel",
+          "text": "*Enjoy your valid haiku* 🤖",
+          "type": "mrkdwn",
+        })
+      })
+      fetch(req.query.response_url,
+        {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          "response_type": "in_channel",
           "text": `${haiku}`
         })
       })
-      res.status(200).send(
-        {"response_type": "in_channel",
-        "text": "*Enjoy your valid haiku* 🤖",
-        "type": "mrkdwn"}
-      );
+      res.status(200).send('');
     }
   }
   catch (error) {
