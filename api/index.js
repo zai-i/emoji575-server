@@ -88,15 +88,15 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   }
   try {
     const response = await retryRequest(process.env.RAPID_API_URL, options)
-    const haiku = smarten(response);
-    res.status(200).send('')
+    const haiku = smarten(response)
+    res.sendStatus(200)
     fetch(req.query.response_url,
       {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: `{"response_type": "in_channel", "text": "${haiku}", "replace_original": "false"}`,
+      body: `{"response_type": "in_channel", "text": "${haiku}"}`,
     })
   }
   catch (error) {
