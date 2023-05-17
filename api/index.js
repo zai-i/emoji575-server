@@ -100,10 +100,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         headers: {
           'content-type': 'application/json',
         },
-        body: `{
+        body: JSON.stringify({
           "response_type": "in_channel",
-          "text": "Generating a haiku..."
-        }`
+          "text": "Generating a valid haiku..."
+        })
       })
       fetch(req.query.response_url,
         {
@@ -111,10 +111,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         headers: {
           'content-type': 'application/json',
         },
-        body: `{
+        body: JSON.stringify({
           "response_type": "in_channel",
-          "text": ${haiku}
-        }`
+          "text": `${haiku}`
+        })
       })
     }
   }
