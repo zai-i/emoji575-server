@@ -116,7 +116,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         })
       })
     }
-    return res.status(200).send({'text': 'ok, got that'})
+    return res.status(200).send('')
   }
 })
 
