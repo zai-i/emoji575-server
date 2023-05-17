@@ -118,6 +118,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         }).catch(e => console.log(e))  
       }
     )
+    return res.status(200).send('')
     }
   }
 })
