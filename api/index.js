@@ -116,6 +116,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           "type": "mrkdwn",
         }).replace('\n','\\n')
       })
+      return res.status(200).send('')
     }
   }
   catch (error) {
