@@ -104,7 +104,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         "type": "mrkdwn",
       }).replace('\n','\\n')
       })
-      .then(
       fetch(req.query.response_url,
         {
         method: 'POST',
@@ -115,8 +114,9 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           "response_type": "in_channel",
           "text": `${haiku}`
           })
-        })
+        }
     )
+    return res.status(200).send('')
     }
   }
 })
