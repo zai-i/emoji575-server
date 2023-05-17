@@ -10,13 +10,14 @@ var corsOptions = {
 }
 
 function validate(text) {
-  const lines = text?.trim().split(/\r?\n/)
+  const lines = text.trim().split(/\r?\n/)
   let errored = false
 
   if (lines.length !== 3) {
     errored = true
   } else {
     lines.forEach((line, idx) => {
+      console.log(line, syl.countSyllables(line))
       // remove weird commas
       line = line.replace('’', '\'')
       const s = syl.countSyllables(line)
@@ -31,17 +32,20 @@ function validate(text) {
 }
 
 async function requestHaiku(url, options) {
-  do {
-    const response = await fetch(url, options)
-    const json = await response.json()
-    const haiku = json.choices[0].message.content
-    return haiku
-  } while (!validate(haiku));
-}
+  let haiku;
+
+  const response = await fetch(url, options)
+  const json = await response.json();
+  haiku = json.choices[0].message.content
+  if(validate(haiku)) {
+    haiku = requestHaiku(url, options); // fetch again
+  }
+  return haiku;
+};
 
 async function retryRequest(url, options) {
   try {
-    const haiku = await requestHaiku(url, options)
+    const haiku = requestHaiku(url, options)
     return haiku;
   } catch (error) {
     console.log('Request failed', error)
