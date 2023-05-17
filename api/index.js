@@ -93,6 +93,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
+      res.status(200).send('')
       fetch(req.query.response_url,
         {
         method: 'POST',
@@ -116,7 +117,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           "type": "mrkdwn",
         }).replace('\n','\\n')
       })
-      return res.status(200).send('')
     }
   }
   catch (error) {
