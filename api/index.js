@@ -100,7 +100,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: `{"response_type": "in_channel", "text": "${haiku}", "replace_original": "false"}`,
+      body: `{"response_type": "in_channel", "text": "${haiku}"}`,
     })
   }
   catch (error) {
