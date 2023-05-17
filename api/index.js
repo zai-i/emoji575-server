@@ -93,7 +93,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
-      res.sendStatus(200);
+      res.status(200);
       fetch(req.query.response_url,
         {
         method: 'POST',
