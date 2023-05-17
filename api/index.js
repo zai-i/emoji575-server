@@ -93,9 +93,16 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
-      res.status(200).send({
-        "text": "Generating a valid haiku...",
-        "response_type": "in_channel"
+      fetch(req.query.response_url,
+        {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: `{
+          "text": "Generating a valid haiku...",
+          "response_type": "in_channel"
+        }`
       })
       fetch(req.query.response_url,
         {
