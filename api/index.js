@@ -88,7 +88,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   try {
     const response = await retryRequest(process.env.RAPID_API_URL, options)
     const haiku = smarten(response);
-    return res.send(
+    return res.status(200).send(
       {
         "response_type": "in_channel",
         "text": haiku
