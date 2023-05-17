@@ -93,7 +93,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
-      res.status(200).send({"response_type": "in_channel"});
+      res.status(200).send({"response_type": "in_channel", text: ""});
       fetch(req.query.response_url,
         {
         method: 'POST',
