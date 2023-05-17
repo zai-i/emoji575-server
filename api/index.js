@@ -85,7 +85,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     },
     body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.text}."}]}`,
   }
-  try {
     const response = await retryRequest(process.env.RAPID_API_URL, options)
     const haiku = smarten(response)
   
@@ -93,18 +92,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
+    setImmediate(() => {
       res.status(200).send('')
-      fetch(req.query.response_url,
-        {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          "response_type": "in_channel",
-          "text": `${haiku}`
-        })
-      })
       fetch(req.query.response_url,
         {
         method: 'POST',
@@ -117,11 +106,18 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           "type": "mrkdwn",
         }).replace('\n','\\n')
       })
-    }
-  }
-  catch (error) {
-    console.error(error)
-    return res.send(error)
+    });
+    fetch(req.query.response_url,
+      {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        "response_type": "in_channel",
+        "text": `${haiku}`
+        })
+      })
     }
   }
 })
