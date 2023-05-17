@@ -102,7 +102,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         },
         body: JSON.stringify({
           "response_type": "in_channel",
-          "text": `${haiku}`
+          "text": "*Enjoy your valid haiku!* 🤖",
+          "type": "mrkdwn",
         })
       })
       fetch(req.query.response_url,
@@ -113,8 +114,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         },
         body: JSON.stringify({
           "response_type": "in_channel",
-          "text": "*Enjoy your valid haiku!* 🤖",
-          "type": "mrkdwn",
+          "text": `${haiku}`
         })
       })
     }
