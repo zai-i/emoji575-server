@@ -94,7 +94,15 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
+      },
+      body: `{"response_type": "ephemeral", "text": "Generating a valid haiku..."}`,
+    })
+    fetch(req.query.response_url,
+      {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
       },
       body: `{"response_type": "in_channel", "text": "${haiku}"}`,
     })
