@@ -92,7 +92,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
-     // Lets call a function that will take > 3 seconds to resolve. 
     fetch(req.query.response_url,
       {
       method: 'POST',
@@ -104,9 +103,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         "text": `*enjoy your valid haiku, ${req.query.user_name}* 🤖 \n   _${req.query.text}_`,
         "type": "mrkdwn",
       }).replace('\n','\\n')
-    }).then(async (response) => {
+    }).then(async () => {
 
-      // Use the bot.replyPrivate to shoot the user a DM with their info.
       await fetch(req.query.response_url,
         {
         method: 'POST',
