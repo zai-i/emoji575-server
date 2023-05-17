@@ -43,7 +43,7 @@ async function requestHaiku(url, options) {
   return haiku;
 };
 
-function retryRequest(url, options) {
+async function retryRequest(url, options) {
   try {
     const haiku = requestHaiku(url, options)
     return haiku;
@@ -86,7 +86,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.text}."}]}`,
   }
   try {
-    const response = retryRequest(process.env.RAPID_API_URL, options)
+    const response = await retryRequest(process.env.RAPID_API_URL, options)
     const haiku = smarten(response)
   
     if (!req.query.response_url) {
