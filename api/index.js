@@ -93,7 +93,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     }
     else {
       try {
-        res.status(200).send('')
         fetch(req.query.response_url,
           {
           method: 'POST',
@@ -120,7 +119,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       }
       catch(error) {
         console.error(error)
-        res.status(200).send('')
       }
     }
   }
