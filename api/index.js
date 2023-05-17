@@ -106,10 +106,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             "type": "mrkdwn",
           }).replace('\n','\\n')
           })
-        } catch (error) {
-          console.error(error);
-        }
-        try {
           fetch(req.query.response_url,
             {
             method: 'POST',
@@ -121,9 +117,9 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               "text": `${haiku}`,
             })
             })
-          } catch (error) {
-            console.error(error);
-          }
+        } catch (error) {
+          console.error(error);
+        }
     }
   }
 })
