@@ -2,64 +2,10 @@ const express = require('express')
 const app = express()
 const port = 3000
 const cors = require('cors')
-const syl = require('syllabificate');
 
 var corsOptions = {
   origin: ['https://emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
   optionsSuccessStatus: 200 
-}
-
-function validate(text) {
-  const lines = text.trim().split(/\r?\n/)
-  let errored = false
-
-  if (lines.length !== 3) {
-    errored = true
-  } else {
-    lines.forEach((line, idx) => {
-      console.log(line, syl.countSyllables(line))
-      // remove weird commas
-      line = line.replace('’', '\'')
-      const s = syl.countSyllables(line)
-      const allowed = idx !== 1 ? 5 : 7
-      const isValid = s === allowed
-      if (!isValid) {
-        errored = true
-      }
-    })
-  }
-  return errored;
-}
-
-async function requestHaiku(url, options, response_url) {
-  let haiku;
-
-  const response = await fetch(url, options)
-  const json = await response.json();  
-
-  fetch('https://reqbin.com/echo/post/json', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ "id": 78912 })
-  })
-
-  haiku = json.choices[0].message.content
-  if(validate(haiku)) {
-    haiku = requestHaiku(url, options); // fetch again
-  }
-  return haiku;
-};
-
-async function retryRequest(url, options) {
-  try {
-    const haiku = requestHaiku(url, options)
-    return haiku;
-  } catch (error) {
-    console.log('Request failed', error)
-  }
 }
 
 const smarten = (string) => {
@@ -96,9 +42,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.text}."}]}`,
   }
   try {
-    const response = await retryRequest(process.env.RAPID_API_URL, options)
-    const haiku = smarten(response);
-    return res.status(200).send(
+    const response = await fetch(process.env.RAPID_API_URL, options);
+    const json = await response.json();
+    const haiku = smarten(json.choices[0].message.content);
+    return res.send(
       {
         "response_type": "in_channel",
         "text": haiku
