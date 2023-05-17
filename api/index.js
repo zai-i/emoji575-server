@@ -100,9 +100,11 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       },
       body: JSON.stringify({
         "response_type": "in_channel",
-        "text": `${haiku}`
-        })
-    }).then(
+        "text": `*enjoy your valid haiku, ${req.query.user_name}* 🤖 \n   _${req.query.text}_`,
+        "type": "mrkdwn",
+      }).replace('\n','\\n')
+      })
+      .then(
       fetch(req.query.response_url,
         {
         method: 'POST',
@@ -111,9 +113,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         },
         body: JSON.stringify({
           "response_type": "in_channel",
-          "text": `*enjoy your valid haiku, ${req.query.user_name}* 🤖 \n   _${req.query.text}_`,
-          "type": "mrkdwn",
-        }).replace('\n','\\n')
+          "text": `${haiku}`
+          })
         })
     )
     }
