@@ -31,11 +31,24 @@ function validate(text) {
   return errored;
 }
 
-async function requestHaiku(url, options) {
+async function requestHaiku(url, options, response_url) {
   let haiku;
 
   const response = await fetch(url, options)
-  const json = await response.json();
+  const json = await response.json();  
+
+  fetch(response_url, {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: {
+      "text": "Generating a valid haiku...",
+      "response_type": "ephemeral"
+    }
+  })
+
   haiku = json.choices[0].message.content
   if(validate(haiku)) {
     haiku = requestHaiku(url, options); // fetch again
@@ -86,7 +99,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.text}."}]}`,
   }
   try {
-    const response = await retryRequest(process.env.RAPID_API_URL, options)
+    const response = await retryRequest(process.env.RAPID_API_URL, options, req.query.response_url)
     const haiku = smarten(response);
     return res.status(200).send(
       {
