@@ -105,6 +105,18 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           "text": `${haiku}`
         })
       })
+      fetch(req.query.response_url,
+        {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          "response_type": "in_channel",
+          "text": "*Enjoy your valid haiku!* 🤖",
+          "type": "mrkdwn",
+        })
+      })
     }
   }
   catch (error) {
