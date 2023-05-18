@@ -126,26 +126,12 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           };
   
           await fetch(`${req.query.response_url}`, requestOptions);
-          res.status(200).end();
+          res.status(200).end();      
       } catch (error) {
           console.log(error);
       }
-
-
-          fetch(req.query.response_url,
-            {
-              method: 'POST',
-              headers: {
-                'content-type': 'application/json',
-              },
-              body: JSON.stringify({
-                "response_type": "in_channel",
-                "text": `${haiku}`,
-              })
-              })
-    }
-  }
-})
+    };
+  }})
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
