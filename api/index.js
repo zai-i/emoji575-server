@@ -41,15 +41,22 @@ async function requestHaiku(url, options) {
     haiku = requestHaiku(url, options); // fetch again
   }
   return haiku;
-};
+}
 
-async function retryRequest(url, options) {
-  try {
-    const haiku = requestHaiku(url, options)
-    return haiku;
-  } catch (error) {
-    console.log('Request failed', error)
-  }
+async function getHaiku(text) {
+const options = {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+    'X-RapidAPI-Host': process.env.RAPID_API_HOST,
+  },
+  body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${text}."}]}`,
+}
+  const response = await requestHaiku(process.env.RAPID_API_URL, options)
+  const haiku = smarten(response)
+
+  return haiku
 }
 
 const smarten = (string) => {
@@ -75,21 +82,9 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   else if (req.query.text.split(',').length > 15) {
     return res.send({error: 'Too many keywords'})
   }
-  else {
-    const options = {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': process.env.RAPID_API_KEY,
-      'X-RapidAPI-Host': process.env.RAPID_API_HOST,
-    },
-    body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${req.query.text}."}]}`,
-  }
-    const response = await retryRequest(process.env.RAPID_API_URL, options)
-    const haiku = smarten(response)
-  
+  else {  
     if (!req.query.response_url) {
-      res.send(haiku)
+      res.send(await getHaiku(req.query.text))
     }
     else {
       try {
