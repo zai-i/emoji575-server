@@ -92,19 +92,11 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
-      res.status(200).send('');
-          fetch(req.query.response_url,
-            {
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify({
+      res.status(200).send({
               "response_type": "in_channel",
               "text": `🤖 *enjoy your 100% valid haiku* \n   _*${req.query.text} — ${req.query.user_name}*_`,
               "type": "mrkdwn",
-            }).replace('\n','\\n')
-            })
+            }).replace('\n','\\n')}
           fetch(req.query.response_url,
             {
               method: 'POST',
