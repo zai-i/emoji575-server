@@ -93,7 +93,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               "Content-type": "application/json",
           };
   
-          let initial = `{
+          let initialBody = `{
             "blocks": [
               {
                 "type": "section",
@@ -115,15 +115,29 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             ]
           }`;
 
+          let haikuBody = `{
+            "blocks": [
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "plain_text",
+                    "text": "${await getHaiku(req.query.text)}"
+                  }
+                ]
+              }
+            ]
+          }`;
+
           await fetch(`${req.query.response_url}`, {
             method: "POST",
             headers,
-            body: initial,
+            body: initialBody,
         });
           await fetch(`${req.query.response_url}`, {
             method: "POST",
             headers,
-            body: await getHaiku(req.query.text),
+            body: haikuBody,
         });
           res.status(200).end();      
       } catch (error) {
