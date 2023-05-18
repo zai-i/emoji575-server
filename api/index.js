@@ -94,6 +94,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           };
   
           let initialBody = `{
+            "response_type": "in_channel",
             "blocks": [
               {
                 "type": "section",
@@ -116,6 +117,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           }`;
 
           let haikuBody = `{
+            "response_type": "in_channel",
             "blocks": [
               {
                 "type": "context",
