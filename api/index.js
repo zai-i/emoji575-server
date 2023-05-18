@@ -87,6 +87,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(await getHaiku(req.query.text))
     }
     else {
+      res.status(200)
       try {
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
@@ -130,7 +131,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               }
             ]
           }`;
-          fetch(`${req.query.response_url}`, {
+          await fetch(`${req.query.response_url}`, {
             method: "POST",
             headers,
             body: initialBody,
