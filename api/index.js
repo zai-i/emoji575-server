@@ -92,27 +92,45 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(haiku)
     }
     else {
-      res.send({
-        "blocks": [
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "🤖 *enjoy your 100% valid haiku*"
-            }
-          },
-          {
-            "type": "divider"
-          },
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": `_*${req.query.text} — ${req.query.user_name}*_`
-            }
-          }
-        ]
-      })
+      try {
+          const headers = {
+              Authorization: `Bearer ${process.env.BOT_TOKEN}`,
+              "Content-type": "application/json",
+          };
+  
+          let initial = `{
+              response_type: "in_channel",
+              blocks: [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🤖 *enjoy your 100% valid haiku*"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "_*${req.query.text} — ${req.query.user_name}*_"
+                  }
+          }`;
+  
+          const requestOptions = {
+              method: "POST",
+              headers,
+              body: initial,
+          };
+  
+          await fetch(`${req.query.response_url}`, requestOptions);
+          res.status(200).end();
+      } catch (error) {
+          console.log(error);
+      }
+
 
           fetch(req.query.response_url,
             {
