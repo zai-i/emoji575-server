@@ -101,7 +101,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             },
             body: JSON.stringify({
               "response_type": "in_channel",
-              "text": `🤖 *enjoy your 100% valid haiku* ✅ \n   _*${req.query.text} — ${req.query.user_name}*_`,
+              "text": `🤖 *enjoy your 100% valid haiku* \n   _*${req.query.text} — ${req.query.user_name}*_`,
               "type": "mrkdwn",
             }).replace('\n','\\n')
             })
