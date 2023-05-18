@@ -94,30 +94,31 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           };
   
           let initial = `{
-              response_type: "in_channel",
-              blocks: [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "🤖 *enjoy your 100% valid haiku*"
-                  }
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "_*${req.query.text} — ${req.query.user_name}*_"
-                  }
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "🤖 *enjoy your 100% valid haiku*"
+                }
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "_*${req.query.text} — ${req.query.user_name}*_"
+                }
+              }
+            ]
           }`;
   
           const requestOptions = {
               method: "POST",
               headers,
-              body: 'hello',
+              body: initial,
           };
   
           await fetch(`${req.query.response_url}`, requestOptions);
