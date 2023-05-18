@@ -114,15 +114,17 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               }
             ]
           }`;
-  
-          const requestOptions = {
-              method: "POST",
-              headers,
-              body: initial,
-          };
-  
-          await fetch(`${req.query.response_url}`, requestOptions);
-          await fetch(`${req.query.response_url}`, await getHaiku(req.query.text));
+
+          await fetch(`${req.query.response_url}`, {
+            method: "POST",
+            headers,
+            body: initial,
+        });
+          await fetch(`${req.query.response_url}`, {
+            method: "POST",
+            headers,
+            body: await getHaiku(req.query.text),
+        });
           res.status(200).end();      
       } catch (error) {
           console.log(error);
