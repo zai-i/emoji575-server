@@ -122,6 +122,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           };
   
           await fetch(`${req.query.response_url}`, requestOptions);
+          await fetch(`${req.query.response_url}`, await getHaiku(req.query.text));
           res.status(200).end();      
       } catch (error) {
           console.log(error);
