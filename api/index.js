@@ -92,7 +92,21 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               "Content-type": "application/json",
           };
   
-          let initialBody = `{
+          let firstBody = `{
+            "response_type": "ephemeral",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "🤖 *generating your 100% valid haiku...*"
+                }
+              },
+            ]
+          }`;
+
+            
+          let secondBody = `{
             "response_type": "in_channel",
             "blocks": [
               {
@@ -129,10 +143,15 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               }
             ]
           }`;
-        fetch(`${req.query.response_url}`, {
+          fetch(`${req.query.response_url}`, {
+            method: "POST",
+            headers,
+            body: initialBody,
+          });
+        await fetch(`${req.query.response_url}`, {
           method: "POST",
           headers,
-          body: initialBody,
+          body: secondBody,
         });
         await fetch(`${req.query.response_url}`, {
           method: "POST",
