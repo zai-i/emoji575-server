@@ -30,33 +30,24 @@ function validate(text) {
   return errored;
 }
 
-async function requestHaiku(url, options) {
-  let haiku;
-
-  const response = await fetch(url, options)
-  const json = await response.json();  
-
-  haiku = json.choices[0].message.content
-  if(validate(haiku)) {
-    haiku = requestHaiku(url, options); // fetch again
+async function requestHaiku(text) {
+  const options = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+      'X-RapidAPI-Host': process.env.RAPID_API_HOST,
+    },
+    body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${text}."}]}`,
   }
-  return haiku;
-}
+  const response = await fetch(process.env.RAPID_API_URL, options)
+  const json = await response.json();  
+  let haiku = json.choices[0].message.content
 
-async function getHaiku(text) {
-const options = {
-  method: 'POST',
-  headers: {
-    'content-type': 'application/json',
-    'X-RapidAPI-Key': process.env.RAPID_API_KEY,
-    'X-RapidAPI-Host': process.env.RAPID_API_HOST,
-  },
-  body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${text}."}]}`,
-}
-  const response = await requestHaiku(process.env.RAPID_API_URL, options)
-  const haiku = smarten(response)
-
-  return haiku
+  if(validate(haiku)) {
+    haiku = requestHaiku(text); // fetch again
+  }
+  return smarten(haiku);
 }
 
 const smarten = (string) => {
@@ -84,7 +75,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   }
   else {  
     if (!req.query.response_url) {
-      res.send(await getHaiku(req.query.text))
+      res.send(await requestHaiku(req.query.text))
     }
     else {      
           const headers = {
@@ -123,7 +114,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                 "elements": [
                   {
                     "type": "plain_text",
-                    "text": "${await getHaiku(req.query.text)}"
+                    "text": "${await requestHaiku(req.query.text)}"
                   }
                 ]
               }
