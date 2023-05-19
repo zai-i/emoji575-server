@@ -62,10 +62,8 @@ async function requestHaiku(text) {
     json = await response.json()
     haiku = json.choices[0].message.content
   } 
-  
-  const status = validate(haiku) ? "❌" : "✅" ;
 
-  return {haiku, status}
+  return haiku
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -83,7 +81,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   }
   else {  
     if (!req.query.response_url) {
-      res.send(smarten(await requestHaiku(req.query.text).haiku))
+      res.send(smarten(await requestHaiku(req.query.text)))
     }
     else {      
           const headers = {
@@ -111,7 +109,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${await requestHaiku(req.query.text).haiku}"
+                    "text": "${await requestHaiku(req.query.text)}"
                   }
                 },
                 {
@@ -122,7 +120,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   "elements": [
                     {
                       "type": "plain_text",
-                      "text": "${req.query.text} — ${req.query.user_name} ${await requestHaiku(req.query.text).status}",
+                      "text": "${req.query.text} — ${req.query.user_name}",
                       "emoji": true
                     }
                   ]
