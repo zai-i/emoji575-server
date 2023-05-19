@@ -88,6 +88,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
               "Content-type": "application/json",
           };
+
+          const validStatus = validate(await requestHaiku(req.query.text)) === true ? "100% valid ✅" : "invalid after 3 attempts, oops, can’t please everyone ❌"
                     
           let initial = `{
             "response_type": "ephemeral",
@@ -121,6 +123,15 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                     {
                       "type": "plain_text",
                       "text": "${req.query.text} — ${req.query.user_name}",
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "plain_text",
+                      "text": ${validStatus},
                       "emoji": true
                     }
                   ]
