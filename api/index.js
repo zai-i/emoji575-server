@@ -73,6 +73,9 @@ app.get('/', async (req, res) => {
   res.send('Emoji 575')
 })
 app.get('/api', cors(corsOptions), async (req, res) => {
+
+  res.status(200);
+
   if (!req.query.text) {
     return res.send({error: 'You must provide keywords'})
   }
@@ -135,7 +138,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         headers,
         body: haikuBody,
     })]);
-    res.status(200).end();
     };
   }})
 
