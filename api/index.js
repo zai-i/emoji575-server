@@ -54,13 +54,16 @@ async function requestHaiku(text) {
   let json = await response.json()
   let haiku = json.choices[0].message.content
 
+  console.log(haiku, 'out of loop')
   let counter = 0
 
-  while(validate(haiku) === true && counter <= 3) {
+  while(validate(haiku) === true && counter <= 2) {
     counter++
     response = await fetch(process.env.RAPID_API_URL, options)
     json = await response.json()
     haiku = json.choices[0].message.content
+
+    console.log(haiku, counter, 'in loop')
   } 
 
   return haiku
