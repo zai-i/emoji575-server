@@ -88,7 +88,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     }
     else {
 
-      res.status(200);
+      res.status(200).send({text: await getHaiku(req.query.text)});
       
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
