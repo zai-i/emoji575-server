@@ -66,7 +66,8 @@ async function requestHaiku(text) {
     console.log(haiku, counter, 'in loop')
   } 
 
-  return haiku
+  if (validate(haiku) === false) return haiku + ' ✅' 
+  else return haiku + ' ❌'
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -99,7 +100,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "🤖 *enjoy your haiku*"
+                  "text": "🤖 *attempting up to 2 times... enjoy your haiku*"
                 }
               }
             ]
@@ -112,7 +113,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${await requestHaiku(req.query.text)}"
+                    "text": "${await requestHaiku(req.query.text)}",
+                    "emoji": true
                   }
                 },
                 {
