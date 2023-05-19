@@ -95,7 +95,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               {
                 "type": "section",
                 "text": {
-                  "type": "mrkdown",
+                  "type": "mrkdwn",
                   "text": "🤖 *enjoy your haiku*"
                 }
               }
