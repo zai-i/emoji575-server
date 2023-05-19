@@ -30,6 +30,16 @@ function validate(text) {
   return errored;
 }
 
+const smarten = (string) => {
+  string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
+  string = string.replace(/'/g, '\u2019'); // closing singles & apostrophes
+  string = string.replace(/(^|[-\u2014/([{\u2018\s])"/g, '$1\u201c'); // opening doubles
+  string = string.replace(/"/g, '\u201d'); // closing doubles
+  string = string.replace(/--/g, '\u2014'); // em-dashes
+
+  return string;
+};
+
 async function requestHaiku(text) {
   const options = {
     method: 'POST',
@@ -41,24 +51,13 @@ async function requestHaiku(text) {
     body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${text}."}]}`,
   }
   const response = await fetch(process.env.RAPID_API_URL, options)
-  const json = await response.json();  
+  const json = await response.json()
   let haiku = json.choices[0].message.content
-
   if(validate(haiku)) {
     haiku = requestHaiku(text); // fetch again
   }
   return smarten(haiku);
 }
-
-const smarten = (string) => {
-  string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
-  string = string.replace(/'/g, '\u2019'); // closing singles & apostrophes
-  string = string.replace(/(^|[-\u2014/([{\u2018\s])"/g, '$1\u201c'); // opening doubles
-  string = string.replace(/"/g, '\u201d'); // closing doubles
-  string = string.replace(/--/g, '\u2014'); // em-dashes
-
-  return string;
-};
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv-safe').config()
