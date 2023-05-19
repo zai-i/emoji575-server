@@ -96,8 +96,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "🤖 *attempting up to 2 times... enjoy your haiku*",
-                  "emoji": true
+                  "text": "🤖 *attempting up to 2 times... enjoy your haiku*"
                 }
               }
             ]
@@ -110,8 +109,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${await requestHaiku(req.query.text)}",
-                    "emoji": true
+                    "text": "${await requestHaiku(req.query.text)}"
                   }
                 },
                 {
@@ -122,8 +120,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   "elements": [
                     {
                       "type": "plain_text",
-                      "text": "${req.query.text} — ${req.query.user_name}",
-                      "emoji": true
+                      "text": "${req.query.text} — ${req.query.user_name}"
                     }
                   ]
                 }
