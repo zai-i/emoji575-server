@@ -62,8 +62,10 @@ async function requestHaiku(text) {
     json = await response.json()
     haiku = json.choices[0].message.content
   } 
+  
+  const status = validate(haiku) ? "❌" : "✅" ;
 
-  return haiku
+  return {haiku, status}
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -81,15 +83,13 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   }
   else {  
     if (!req.query.response_url) {
-      res.send(smarten(await requestHaiku(req.query.text)))
+      res.send(smarten(await requestHaiku(req.query.text).haiku))
     }
     else {      
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
               "Content-type": "application/json",
           };
-
-          const validStatus = validate(await requestHaiku(req.query.text)) === true ? "100% valid ✅" : "invalid after 3 attempts, oops, can’t please everyone ❌"
                     
           let initial = `{
             "response_type": "ephemeral",
@@ -111,7 +111,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${await requestHaiku(req.query.text)}"
+                    "text": "${await requestHaiku(req.query.text).haiku}"
                   }
                 },
                 {
@@ -122,16 +122,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   "elements": [
                     {
                       "type": "plain_text",
-                      "text": "${req.query.text} — ${req.query.user_name}",
-                    }
-                  ]
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "plain_text",
-                      "text": ${validStatus},
+                      "text": "${req.query.text} — ${req.query.user_name} ${await requestHaiku(req.query.text).status}",
                       "emoji": true
                     }
                   ]
