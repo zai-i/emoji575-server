@@ -102,8 +102,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             ]
           }`;
 
-          const validStatusText = validate(await requestHaiku(req.query.text)) === true ? "100% valid ✅" : "invalid after 3 attempts, oops, can’t please everyone ❌"
-
           let haikuBody = `{
             "response_type": "in_channel",
             {
@@ -124,16 +122,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                     {
                       "type": "plain_text",
                       "text": "${req.query.text} — ${req.query.user_name}",
-                      "emoji": true
-                    }
-                  ]
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "plain_text",
-                      "text": ${validStatusText},
                       "emoji": true
                     }
                   ]
