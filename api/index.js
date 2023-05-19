@@ -95,43 +95,51 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               {
                 "type": "section",
                 "text": {
-                  "type": "mrkdwn",
+                  "type": "ephemeral",
                   "text": "🤖 *enjoy your haiku*"
                 }
               },
-              {
-                "type": "divider"
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "_*${req.query.text} — ${req.query.user_name}*_"
-                }
-              }
             ]
           }`;
 
-          const validStatus = validate(await requestHaiku(req.query.text)) === true ? "100% valid ✅" : "invalid after 3 attempts, oops, can’t please everyone ❌"
+          const validStatusText = validate(await requestHaiku(req.query.text)) === true ? "100% valid ✅" : "invalid after 3 attempts, oops, can’t please everyone ❌"
 
           let haikuBody = `{
             "response_type": "in_channel",
-            "blocks": [
-              {
-                "type": "context",
-                "elements": [
-                  {
-                    "type": "plain_text",
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
                     "text": "${await requestHaiku(req.query.text)}"
-                  },
-                  {
-                    "type": "plain_text",
-                    "text": ${validStatus}
                   }
-                ]
-              }
-            ]
-          }`;
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "plain_text",
+                      "text": "${req.query.text} — ${req.query.user_name}",
+                      "emoji": true
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "plain_text",
+                      "text": ${validStatusText},
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }`;
       await Promise.all([fetch(`${req.query.response_url}`, {
         method: "POST",
         headers,
