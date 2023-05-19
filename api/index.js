@@ -127,19 +127,16 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                 }
               ]
             }`;
-      fetch(`${req.query.response_url}`, {
+      await Promise.all([fetch(`${req.query.response_url}`, {
         method: "POST",
         headers,
         body: initial,
-      })
-      
-      fetch(`${req.query.response_url}`, {
+      }), fetch(`${req.query.response_url}`, {
         method: "POST",
         headers,
         body: haikuBody,
-    });
+    })]);
 
-    res.status(200).end();
     };
   }})
 
