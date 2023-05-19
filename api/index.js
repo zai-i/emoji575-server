@@ -146,7 +146,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           fetch(`${req.query.response_url}`, {
             method: "POST",
             headers,
-            body: initialBody,
+            body: firstBody,
           });
         await fetch(`${req.query.response_url}`, {
           method: "POST",
