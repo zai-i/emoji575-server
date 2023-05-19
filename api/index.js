@@ -50,13 +50,20 @@ async function requestHaiku(text) {
     },
     body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${text}."}]}`,
   }
-  const response = await fetch(process.env.RAPID_API_URL, options)
-  const json = await response.json()
+  let response = await fetch(process.env.RAPID_API_URL, options)
+  let json = await response.json()
   let haiku = json.choices[0].message.content
-  if(validate(haiku)) {
-    haiku = requestHaiku(text); // fetch again
-  }
-  return smarten(haiku);
+
+  let counter = 0
+
+  while(validate(haiku) === true && counter <= 3) {
+    counter++
+    response = await fetch(process.env.RAPID_API_URL, options)
+    json = await response.json()
+    haiku = json.choices[0].message.content
+  } 
+
+  return haiku
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -74,14 +81,14 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   }
   else {  
     if (!req.query.response_url) {
-      res.send(await requestHaiku(req.query.text))
+      res.send(smarten(await requestHaiku(req.query.text)))
     }
     else {      
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
               "Content-type": "application/json",
           };
-            
+                    
           let initial = `{
             "response_type": "in_channel",
             "blocks": [
@@ -89,7 +96,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "🤖 *enjoy your 100% valid haiku*"
+                  "text": "🤖 *enjoy your haiku*"
                 }
               },
               {
@@ -105,6 +112,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             ]
           }`;
 
+          const validStatus = validate(await requestHaiku(req.query.text)) === true ? "100% valid ✅" : "invalid after 3 attempts, oops, can’t please everyone ❌"
+
           let haikuBody = `{
             "response_type": "in_channel",
             "blocks": [
@@ -114,6 +123,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   {
                     "type": "plain_text",
                     "text": "${await requestHaiku(req.query.text)}"
+                  },
+                  {
+                    "type": "plain_text",
+                    "text": ${validStatus}
                   }
                 ]
               }
