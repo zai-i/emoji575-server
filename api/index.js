@@ -104,7 +104,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
 
           let haikuBody = `{
             "response_type": "in_channel",
-            {
               "blocks": [
                 {
                   "type": "section",
