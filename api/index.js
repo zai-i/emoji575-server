@@ -84,9 +84,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     if (!req.query.response_url) {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
-    else {
-      
-    res.status(200).send({text: 'hello'});      
+    else {      
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
               "Content-type": "application/json",
@@ -139,6 +137,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         body: haikuBody,
     })]);
 
+    res.status(200).end();
     };
   }})
 
