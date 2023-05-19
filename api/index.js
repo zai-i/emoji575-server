@@ -90,12 +90,12 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           };
                     
           let initial = `{
-            "response_type": "in_channel",
+            "response_type": "ephemeral",
             "blocks": [
               {
                 "type": "section",
                 "text": {
-                  "type": "ephemeral",
+                  "type": "mrkdown",
                   "text": "🤖 *enjoy your haiku*"
                 }
               }
