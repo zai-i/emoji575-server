@@ -74,8 +74,6 @@ app.get('/', async (req, res) => {
 })
 app.get('/api', cors(corsOptions), async (req, res) => {
 
-  res.status(200).send('');
-
   if (!req.query.text) {
     return res.send({error: 'You must provide keywords'})
   }
@@ -86,7 +84,9 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     if (!req.query.response_url) {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
-    else {      
+    else {
+      
+    res.status(200).send({text: 'hello'});      
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
               "Content-type": "application/json",
@@ -138,6 +138,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         headers,
         body: haikuBody,
     })]);
+
     };
   }})
 
