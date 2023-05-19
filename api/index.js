@@ -74,7 +74,7 @@ app.get('/', async (req, res) => {
 })
 app.get('/api', cors(corsOptions), async (req, res) => {
 
-  res.status(200);
+  res.sendStatus(200);
 
   if (!req.query.text) {
     return res.send({error: 'You must provide keywords'})
