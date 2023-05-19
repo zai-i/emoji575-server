@@ -125,7 +125,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                       "emoji": true
                     }
                   ]
-                },
+                }
               ]
             }`;
       await Promise.all([fetch(`${req.query.response_url}`, {
