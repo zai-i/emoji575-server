@@ -79,10 +79,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   if (!req.query.text) {
     return res.send({error: 'You must provide keywords'})
   }
-  else if (req.query.text.split(',').length > 15) {
+  if (req.query.text.split(',').length > 15) {
     return res.send({error: 'Too many keywords'})
   }
-  else {  
+  else {
     if (!req.query.response_url) {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
