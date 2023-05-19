@@ -87,26 +87,15 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(await getHaiku(req.query.text))
     }
     else {
+
+      res.status(200);
+      
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
               "Content-type": "application/json",
           };
-  
-          let firstBody = `{
-            "response_type": "ephemeral",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "🤖 *generating your 100% valid haiku...*"
-                }
-              },
-            ]
-          }`;
-
             
-          let secondBody = `{
+          let initial = `{
             "response_type": "in_channel",
             "blocks": [
               {
@@ -143,22 +132,16 @@ app.get('/api', cors(corsOptions), async (req, res) => {
               }
             ]
           }`;
-          fetch(`${req.query.response_url}`, {
-            method: "POST",
-            headers,
-            body: firstBody,
-          });
         await fetch(`${req.query.response_url}`, {
           method: "POST",
           headers,
-          body: secondBody,
+          body: initial,
         });
         await fetch(`${req.query.response_url}`, {
           method: "POST",
           headers,
           body: haikuBody,
       });
-        res.status(200).end(); 
     };
   }})
 
