@@ -83,10 +83,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
     else {          
-  res.status(200).json(`{
+  res.status(200).send({
   "response_type": "in_channel",
-  "text": "${await requestHaiku(req.query.text)}"
-  }`);
+  "text": `${await requestHaiku(req.query.text)}`
+  });
   }
 }})
 
