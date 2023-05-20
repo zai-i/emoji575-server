@@ -97,6 +97,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
           }
         ]
       }`;
+      res.setHeader('Content-Type', 'application/json');
       res.send(initial)      
           const headers = {
               Authorization: `Bearer ${process.env.BOT_TOKEN}`,
