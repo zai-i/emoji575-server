@@ -129,13 +129,13 @@ app.get('/api', cors(corsOptions), async (req, res) => {
 fetch(`${req.query.response_url}`, {
   method: "POST",
   headers,
-  body: haikuBody,
+  body: initial,
 }).then(async () => {
 
     await fetch(`${req.query.response_url}`, {
       method: "POST",
       headers,
-      body: initial,
+      body: haikuBody,
     }).catch(e => console.log(e))  
 
 }).catch(e => console.log(e))
