@@ -12,18 +12,17 @@ var corsOptions = {
 function validate(text) {
   const lines = text.trim().split(/\r?\n/)
   let errored = false
-  let message = ''
+  let message = '';
 
   if (lines.length !== 3) {
     errored = true
   } else {
     lines.forEach((line, idx) => {
       // remove weird commas
-      line = line.replace('’', '\'')
       const s = syl.countSyllables(line)
       const allowed = idx !== 1 ? 5 : 7
       const isValid = s === allowed
-      message += `${line} ${isValid ? '✅' : '❌'} \n`
+      message += `${line} ${isValid ? `✅[${s}] \n` : `❌[${s}] \n`}`
       if (!isValid) {
         errored = true
       }
