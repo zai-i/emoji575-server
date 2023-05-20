@@ -88,7 +88,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     else {          
 
       const initial = `{
-        "response_type": "in_channel",
+        "response_type": "ephemeral",
         "blocks": [
           {
             "type": "section",
@@ -107,7 +107,6 @@ app.get('/api', cors(corsOptions), async (req, res) => {
 
     const haikuBody = `{
       "response_type": "in_channel",
-      "replace_original": true,
         "blocks": [
           {
             "type": "section",
@@ -133,12 +132,12 @@ app.get('/api', cors(corsOptions), async (req, res) => {
 await fetch(`${req.query.response_url}`, {
   method: "POST",
   headers,
-  body: haikuBody,
+  body: initial,
 });
 await fetch(`${req.query.response_url}`, {
   method: "POST",
   headers,
-  body: initial,
+  body: haikuBody,
 });
 
 res.status(200).end()   
