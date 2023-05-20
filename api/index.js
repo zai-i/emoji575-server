@@ -83,29 +83,12 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
     else {          
-
-
-res.status(200).send(`{
+  res.status(200).send(`{
   "response_type": "in_channel",
   "text": "${await requestHaiku(req.query.text)}"
   }`);
-  
-      const initial = `{
-        "response_type": "ephemeral",
-        "blocks": [
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "🤖 *attempting up to 3 times... enjoy your haiku*"
-            }
-          }
-        ]
-      }`; 
-
-    };
-  }})
-
+  }
+}})
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
