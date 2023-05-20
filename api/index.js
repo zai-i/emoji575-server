@@ -55,7 +55,7 @@ async function requestHaiku(text) {
   let haiku = json.choices[0].message.content
   let counter = 0
 
-  while(validate(haiku) === true && counter <= 3) {
+  while(validate(haiku) === true && counter <= 2) {
     counter++
     response = await fetch(process.env.RAPID_API_URL, options)
     json = await response.json()
@@ -97,7 +97,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "🤖 *attempting up to 3 times... enjoy your haiku*"
+                  "text": "🤖 *attempting... enjoy your haiku*"
                 }
               }
             ]
