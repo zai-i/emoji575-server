@@ -62,8 +62,9 @@ async function requestHaiku(text) {
     haiku = json.choices[0].message.content
   } 
 
-  if (validate(haiku) === false) return haiku + '\n\n ✅' 
-  else return haiku + '\n\n ❌'
+  const valid = validate(haiku) === false ?  '\n\n ✅' : '\n\n ❌'
+
+  return haiku + valid
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -84,8 +85,11 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     if (!req.query.response_url) {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
-    else {                    
-      let initial = `{
+    else {           
+      
+      res.status(200).send('')   
+                 
+      const initial = `{
         "response_type": "in_channel",
         "blocks": [
           {
@@ -96,9 +100,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             }
           }
         ]
-      }`;
-      
-      res.send('')      
+      }`; 
 
       const headers = {
         "Authorization": `Bearer ${process.env.BOT_TOKEN}`,
