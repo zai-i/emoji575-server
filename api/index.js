@@ -82,15 +82,54 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     const result = await requestHaiku(req.query.text);
 
     if (!req.query.response_url) {
-      res.send(smarten(result))
+      res.send(result)
     }
-    else {          
-  res.status(200).send({
-  "response_type": "in_channel",
-  "text": JSON.stringify(`${result}`).replace(/\n/g,' ')
-  });
-  }
-}})
+    else {
+          const headers = {
+              Authorization: `Bearer ${process.env.BOT_TOKEN}`,
+              "Content-type": "application/json",
+          };
+  
+          const initial = `{
+            "response_type": "ephemeral",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "🤖 *attempting up to 3 times... enjoy your haiku*"
+                }
+              }
+            ]
+          }`;     
+
+          let body = `{
+            "response_type": "in_channel",
+            "blocks": [
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "plain_text",
+                    "text": "${result}"
+                  }
+                ]
+              }
+            ]
+          }`;
+        fetch(`${req.query.response_url}`, {
+          method: "POST",
+          headers,
+          body: initial,
+        });
+        fetch(`${req.query.response_url}`, {
+          method: "POST",
+          headers,
+          body: body,
+      });
+        res.status(200).end(); 
+    };
+  }})
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
