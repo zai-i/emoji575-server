@@ -12,6 +12,7 @@ var corsOptions = {
 function validate(text) {
   const lines = text.trim().split(/\r?\n/)
   let errored = false
+  let message = ''
 
   if (lines.length !== 3) {
     errored = true
@@ -22,12 +23,13 @@ function validate(text) {
       const s = syl.countSyllables(line)
       const allowed = idx !== 1 ? 5 : 7
       const isValid = s === allowed
+      message += ` ${line} ${isValid ? '✅' : '❌'}`
       if (!isValid) {
         errored = true
       }
     })
   }
-  return errored;
+  return smarten(message);
 }
 
 const smarten = (string) => {
@@ -53,18 +55,8 @@ async function requestHaiku(text) {
   let response = await fetch(process.env.RAPID_API_URL, options)
   let json = await response.json()
   let haiku = json.choices[0].message.content
-  let counter = 0
 
-  while(validate(haiku) === true && counter <= 2) {
-    counter++
-    response = await fetch(process.env.RAPID_API_URL, options)
-    json = await response.json()
-    haiku = json.choices[0].message.content
-  } 
-
-  const valid = validate(haiku) === false ?  '\n\n ✅' : '\n\n ❌'
-
-  return haiku + valid
+  return validate(haiku);
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -85,63 +77,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       res.send(result)
     }
     else {
-          const headers = {
-              "Authorization": `Bearer ${process.env.BOT_TOKEN}`,
-              "Content-type": "application/json",
-          };
-  
-          const initial = `{
-            "response_type": "ephemeral",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "🤖 *attempting... enjoy your haiku*"
-                }
-              }
-            ]
-          }`;     
-
-          const body = `{
-            "response_type": "in_channel",
-            "blocks": [
-              {
-                "type": "context",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": "${result}"
-                  }
-                ]
-              },
-              {
-                "type": "divider"
-              },
-              {
-                "type": "context",
-                "elements": [
-                  {
-                    "type": "plain_text",
-                    "text": "${req.query.text} — ${req.query.user_name}"
-                  }
-                ]
-              }
-            ]
-            }`;
-        fetch(`${req.query.response_url}`, {
-          method: "POST",
-          headers,
-          body: initial,
-        });
-        fetch(`${req.query.response_url}`, {
-          method: "POST",
-          headers,
-          body: body,
-      });
-        res.status(200).end(); 
-    };
-  }})
+      res.send({response_type: "in_channel", text: result})
+  }}})
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
