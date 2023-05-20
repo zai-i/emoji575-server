@@ -102,7 +102,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         "Content-type": "application/json",
     };
 
-    const haikuBody = `{
+    const body = `{
       "response_type": "in_channel",
         "blocks": [
           {
@@ -125,23 +125,18 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             ]
           }
         ]
-      }`;
-fetch(`${req.query.response_url}`, {
-  method: "POST",
-  headers,
-  body: initial,
-});
+      }`
 
 fetch(`${req.query.response_url}`, {
   method: "POST",
   headers,
-  body: haikuBody,
+  body: body,
 });
 
-
-await new Promise(resolve => setTimeout(resolve, 5000));
-
-res.status(200).end()   
+res.status(200).json({
+  "response_type": "in_channel",
+  "text": "Getting data ..."
+  });  
     };
   }})
 
