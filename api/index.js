@@ -23,7 +23,7 @@ function validate(text) {
       const s = syl.countSyllables(line)
       const allowed = idx !== 1 ? 5 : 7
       const isValid = s === allowed
-      message += ` ${line} ${isValid ? '✅' : '❌'}`
+      message += ` ${line} ${isValid ? '✅' : '❌'} \n`
       if (!isValid) {
         errored = true
       }
