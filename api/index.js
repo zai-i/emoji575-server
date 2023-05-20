@@ -112,20 +112,22 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                   {
                     "type": "plain_text",
                     "text": "${result}"
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "plain_text",
-                      "text": "${req.query.text} — ${req.query.user_name}"
-                    }
-                  ]
-                }
-              ]
+                  }
+                ]
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "plain_text",
+                    "text": "${req.query.text} — ${req.query.user_id}"
+                  }
+                ]
+              }
+            ]
             }`;
         fetch(`${req.query.response_url}`, {
           method: "POST",
