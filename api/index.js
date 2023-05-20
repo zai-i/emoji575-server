@@ -85,10 +85,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     else {          
 
 
-res.status(200).json({
+res.status(200).send(`{
   "response_type": "in_channel",
-  "text": "Getting data ..."
-  });
+  "text": "${await requestHaiku(req.query.text)}"
+  }`);
   
       const initial = `{
         "response_type": "ephemeral",
@@ -103,21 +103,6 @@ res.status(200).json({
         ]
       }`; 
 
-      const headers = {
-        "Authorization": `Bearer ${process.env.BOT_TOKEN}`,
-        "Content-type": "application/json",
-    };
-
-    const body = `{
-      "response_type": "in_channel",
-        "text": "${req.query.text} — ${req.query.user_name}"
-              }`
-  
- fetch(`${req.query.response_url}`, {
-    method: "POST",
-    headers,
-    body: body,
-  });
     };
   }})
 
