@@ -86,9 +86,10 @@ app.get('/api', cors(corsOptions), async (req, res) => {
 
 
 res.status(200).json({
-  "response_type": "in_channel"
+  "response_type": "in_channel",
+  "text": "Getting data ..."
   });
-
+  
       const initial = `{
         "response_type": "ephemeral",
         "blocks": [
@@ -109,28 +110,8 @@ res.status(200).json({
 
     const body = `{
       "response_type": "in_channel",
-        "blocks": [
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "${await requestHaiku(req.query.text)}"
-            }
-          },
-          {
-            "type": "divider"
-          },
-          {
-            "type": "context",
-            "elements": [
-              {
-                "type": "plain_text",
-                "text": "${req.query.text} — ${req.query.user_name}"
-              }
-            ]
-          }
-        ]
-      }`
+        "text": "${req.query.text} — ${req.query.user_name}"
+              }`
   
  fetch(`${req.query.response_url}`, {
     method: "POST",
