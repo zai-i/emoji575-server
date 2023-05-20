@@ -134,6 +134,8 @@ await fetch(`${req.query.response_url}`, {
   headers,
   body: initial,
 });
+
+await new Promise(resolve => setTimeout(resolve, 5000));
 await fetch(`${req.query.response_url}`, {
   method: "POST",
   headers,
