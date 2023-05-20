@@ -86,7 +86,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     }
     else {
           const headers = {
-              Authorization: `Bearer ${process.env.BOT_TOKEN}`,
+              "Authorization": `Bearer ${process.env.BOT_TOKEN}`,
               "Content-type": "application/json",
           };
   
@@ -103,7 +103,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             ]
           }`;     
 
-          let body = `{
+          const body = `{
             "response_type": "in_channel",
             "blocks": [
               {
