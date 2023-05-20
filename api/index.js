@@ -127,16 +127,18 @@ app.get('/api', cors(corsOptions), async (req, res) => {
         ]
       }`
 
-fetch(`${req.query.response_url}`, {
-  method: "POST",
-  headers,
-  body: body,
-});
+
 
 res.status(200).json({
   "response_type": "in_channel",
   "text": "Getting data ..."
-  });  
+  });
+  
+  await fetch(`${req.query.response_url}`, {
+    method: "POST",
+    headers,
+    body: body,
+  });
     };
   }})
 
