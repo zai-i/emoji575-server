@@ -86,10 +86,9 @@ app.get('/api', cors(corsOptions), async (req, res) => {
 
 
 res.status(200).json({
-  "response_type": "in_channel",
-  "text": "Getting data ..."
+  "response_type": "in_channel"
   });
-  
+
       const initial = `{
         "response_type": "ephemeral",
         "blocks": [
