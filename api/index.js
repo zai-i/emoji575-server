@@ -30,6 +30,54 @@ function validate(text) {
   return errored;
 }
 
+const postHaiku = async (query) => {
+  const headers = {
+    Authorization: `Bearer ${process.env.BOT_TOKEN}`,
+    'Accept': 'application/json',
+    "Content-type": "application/json",
+};
+
+const body = `{
+  "response_type": "in_channel",
+  "replace_original": true,
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "${await requestHaiku(query.text)}"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "context",
+        "elements": [
+          {
+            "type": "plain_text",
+            "text": "${querytext} — ${query.user_name}"
+          }
+        ]
+      }
+    ]
+  }`;
+  try {
+      const response = await fetch(query.request_url, {
+       method: 'POST',
+       headers,
+       body,
+       });
+       const data = await response.json();
+       console.log(data);
+     } catch(error) {
+        console.log(error)
+       } 
+  }
+
+
+axiosPostCall()
+
 const smarten = (string) => {
   string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
   string = string.replace(/'/g, '\u2019'); // closing singles & apostrophes
@@ -84,8 +132,9 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     if (!req.query.response_url) {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
-    else {                    
-      let initial = `{
+    else {          
+      res.setHeader('Content-Type', 'application/json');
+      res.send(`{
         "response_type": "in_channel",
         "blocks": [
           {
@@ -96,47 +145,11 @@ app.get('/api', cors(corsOptions), async (req, res) => {
             }
           }
         ]
-      }`;
-      res.setHeader('Content-Type', 'application/json');
-      res.send(initial)      
+      }`)      
 
-      const headers = {
-        Authorization: `Bearer ${process.env.BOT_TOKEN}`,
-        "Content-type": "application/json",
-    };
+postHaiku(req.query)
 
-    const haikuBody = `{
-      "response_type": "in_channel",
-      "replace_original": true,
-        "blocks": [
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "${await requestHaiku(req.query.text)}"
-            }
-          },
-          {
-            "type": "divider"
-          },
-          {
-            "type": "context",
-            "elements": [
-              {
-                "type": "plain_text",
-                "text": "${req.query.text} — ${req.query.user_name}"
-              }
-            ]
-          }
-        ]
-      }`;
-await fetch(`${req.query.response_url}`, {
-  method: "POST",
-  headers,
-  body: haikuBody,
-});
-    };
-  }})
+}}})
 
 
 app.listen(port, () => {
