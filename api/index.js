@@ -62,8 +62,8 @@ async function requestHaiku(text) {
     haiku = json.choices[0].message.content
   } 
 
-  if (validate(haiku) === false) return haiku + ' ✅' 
-  else return haiku + ' ❌'
+  if (validate(haiku) === false) return haiku + '\n\n ✅' 
+  else return haiku + '\n\n ❌'
 }
 
 if (process.env.NODE_ENV !== 'production') {
