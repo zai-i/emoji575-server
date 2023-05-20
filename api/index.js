@@ -2,34 +2,10 @@ const express = require('express');
 const app = express();
 const port = 3000
 const cors = require('cors')
-const syl = require('syllabificate');
 
 var corsOptions = {
   origin: ['https://emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
   optionsSuccessStatus: 200 
-}
-
-function validate(text) {
-  const lines = text.trim().split(/\r?\n/)
-  let errored = false
-  let message = ''
-
-  if (lines.length !== 3) {
-    errored = true
-  } else {
-    lines.forEach((line, idx) => {
-      // remove weird commas
-      line = line.replace('’', '\'')
-      const s = syl.countSyllables(line)
-      const allowed = idx !== 1 ? 5 : 7
-      const isValid = s === allowed
-      message += `${line} ${isValid ? '✅ \n' : '❌ \n'}`
-      if (!isValid) {
-        errored = true
-      }
-    })
-  }
-  return smarten(message);
 }
 
 const smarten = (string) => {
@@ -56,7 +32,7 @@ async function requestHaiku(text) {
   let json = await response.json()
   let haiku = json.choices[0].message.content
 
-  return validate(haiku);
+  return smarten(haiku);
 }
 
 if (process.env.NODE_ENV !== 'production') {
