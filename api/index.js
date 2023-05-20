@@ -55,7 +55,7 @@ async function requestHaiku(text) {
   let haiku = json.choices[0].message.content
   let counter = 0
 
-  while(validate(haiku) === true && counter <= 2) {
+  while(validate(haiku) === true && counter <= 3) {
     counter++
     response = await fetch(process.env.RAPID_API_URL, options)
     json = await response.json()
