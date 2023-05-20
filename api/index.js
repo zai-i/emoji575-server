@@ -130,15 +130,16 @@ fetch(`${req.query.response_url}`, {
   method: "POST",
   headers,
   body: initial,
-}).then(async () => {
+});
 
-    await fetch(`${req.query.response_url}`, {
-      method: "POST",
-      headers,
-      body: haikuBody,
-    }).catch(e => console.log(e))  
+fetch(`${req.query.response_url}`, {
+  method: "POST",
+  headers,
+  body: haikuBody,
+});
 
-}).catch(e => console.log(e))
+
+await new Promise(resolve => setTimeout(resolve, 5000));
 
 res.status(200).end()   
     };
