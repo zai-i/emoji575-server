@@ -123,7 +123,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
                 "elements": [
                   {
                     "type": "plain_text",
-                    "text": "${req.query.text} — ${req.query.user_id}"
+                    "text": "${req.query.text} — ${req.query.user_name}"
                   }
                 ]
               }
