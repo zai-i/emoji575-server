@@ -1,8 +1,13 @@
-const express = require('express'); 
-const app = express();
+import express from 'express'
+import { syllableCount } from 'syllable-count-english'
+const app = express()
 const port = 3000
-const cors = require('cors')
-const syl = require('syllabificate');
+import cors from 'cors';
+import * as dotenv from 'dotenv';
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 var corsOptions = {
   origin: ['https://emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
@@ -19,7 +24,8 @@ function validate(text) {
   } else {
     lines.forEach((line, idx) => {
       // remove weird commas
-      const s = syl.countSyllables(line)
+      line = line.replace('’', '\'')
+      const s = syllableCount(line)
       const allowed = idx !== 1 ? 5 : 7
       const isValid = s === allowed
       message += `${line} ${isValid ? `✅[${s}] \n` : `❌[${s}] \n`}`
@@ -58,9 +64,6 @@ async function requestHaiku(text) {
   return validate(haiku);
 }
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv-safe').config()
-}
 app.get('/', async (req, res) => {
   res.send('Emoji 575')
 })
@@ -82,5 +85,3 @@ app.get('/api', cors(corsOptions), async (req, res) => {
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
-
-module.exports = app
