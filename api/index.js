@@ -86,7 +86,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     }
     else {                    
       let initial = `{
-        "response_type": "ephemeral",
+        "response_type": "in_channel",
         "blocks": [
           {
             "type": "section",
@@ -99,45 +99,46 @@ app.get('/api', cors(corsOptions), async (req, res) => {
       }`;
       res.setHeader('Content-Type', 'application/json');
       res.send(initial)      
-          const headers = {
-              Authorization: `Bearer ${process.env.BOT_TOKEN}`,
-              "Content-type": "application/json",
-          };
-
-          let haikuBody = `{
-            "response_type": "in_channel",
-            "replace_original": true,
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${await requestHaiku(req.query.text)}"
-                  }
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "plain_text",
-                      "text": "${req.query.text} — ${req.query.user_name}"
-                    }
-                  ]
-                }
-              ]
-            }`;
-      await fetch(`${req.query.response_url}`, {
-        method: "POST",
-        headers,
-        body: haikuBody,
-    });
 
     res.status(200).end();
     };
   }})
+
+  const headers = {
+    Authorization: `Bearer ${process.env.BOT_TOKEN}`,
+    "Content-type": "application/json",
+};
+
+let haikuBody = `{
+  "response_type": "in_channel",
+  "replace_original": true,
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "${await requestHaiku(req.query.text)}"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "context",
+        "elements": [
+          {
+            "type": "plain_text",
+            "text": "${req.query.text} — ${req.query.user_name}"
+          }
+        ]
+      }
+    ]
+  }`;
+await fetch(`${req.query.response_url}`, {
+method: "POST",
+headers,
+body: haikuBody,
+});
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
