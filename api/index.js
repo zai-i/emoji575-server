@@ -32,7 +32,7 @@ function validate(text) {
 
 const postHaiku = async (query) => {
   const headers = {
-    Authorization: `Bearer ${process.env.BOT_TOKEN}`,
+    "Authorization": `Bearer ${process.env.BOT_TOKEN}`,
     'Accept': 'application/json',
     "Content-type": "application/json",
 };
