@@ -85,10 +85,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     if (!req.query.response_url) {
       res.send(smarten(await requestHaiku(req.query.text)))
     }
-    else {           
-      
-      res.status(200).send('')   
-                 
+    else {          
+
       const initial = `{
         "response_type": "in_channel",
         "blocks": [
@@ -142,6 +140,8 @@ await fetch(`${req.query.response_url}`, {
   headers,
   body: initial,
 });
+
+res.status(200).end()   
     };
   }})
 
