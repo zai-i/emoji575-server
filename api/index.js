@@ -87,7 +87,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     else {          
   res.status(200).send({
   "response_type": "in_channel",
-  "text": JSON.stringify(`${result}`)
+  "text": JSON.stringify(`${result}`).replace(/\n/g,' ')
   });
   }
 }})
