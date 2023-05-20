@@ -79,14 +79,17 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     return res.send({error: 'You must provide keywords'})
   }
   else {
+    result = await requestHaiku(req.query.text)
+    
     if (!req.query.response_url) {
-      res.send(smarten(await requestHaiku(req.query.text)))
+      res.send(smarten(result))
     }
     else {          
-  res.send(`{
-  "response_type": "in_channel",
-  "text": ${await requestHaiku(req.query.text)}
-  }`);
+      res.send(
+        {
+          "response_type": "in_channel",
+          "text": result
+        })
   }
 }})
 
