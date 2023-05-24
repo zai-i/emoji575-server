@@ -4,7 +4,7 @@ const port = 3000
 const cors = require('cors')
 
 var corsOptions = {
-  origin: ['https://emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
+  origin: ['https://emoji575.zaiz.ai', 'https://www.emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
   optionsSuccessStatus: 200 
 }
 
@@ -31,7 +31,7 @@ async function requestHaiku(text) {
   let response = await fetch(process.env.RAPID_API_URL, options)
   let json = await response.json()
   let haiku = json.choices[0].message.content
-
+  
   return smarten(haiku);
 }
 
