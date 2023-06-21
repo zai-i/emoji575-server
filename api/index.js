@@ -2,13 +2,42 @@ const express = require('express');
 const app = express();
 const port = 3000
 const cors = require('cors')
+const syl = require('syllabificate');
 
 var corsOptions = {
   origin: ['https://emoji575.zaiz.ai', 'https://www.emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
   optionsSuccessStatus: 200 
 }
 
-const smarten = (string) => {
+function validateHaiku(text) {
+  let lines = text?.trim().split(/\r?\n/)
+  let errored = false
+
+  if (lines.length !== 3) {
+    errored = true
+  } else {
+    lines.forEach((line, idx) => {
+      line = line.replace('’', '\'')
+      const s = syl.countSyllables(line)
+      const allowed = idx !== 1 ? 5 : 7
+      const isValid = s === allowed
+      if (!isValid) {
+        errored = true
+      }
+    })
+  }
+  return errored;
+}
+
+async function getValidHaiku(text) {
+  let haiku;
+  do {
+    haiku = await requestHaiku(text)
+  } while (validateHaiku(haiku))
+  return haiku;
+}
+
+function smarten(string)  {
   string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
   string = string.replace(/'/g, '\u2019'); // closing singles & apostrophes
   string = string.replace(/(^|[-\u2014/([{\u2018\s])"/g, '$1\u201c'); // opening doubles
@@ -35,6 +64,8 @@ async function requestHaiku(text) {
   return smarten(haiku);
 }
 
+
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv-safe').config()
 }
@@ -50,8 +81,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     const result = await requestHaiku(req.query.text);
 
     if (!req.query.response_url) {
-      res.send(result)
-    }
+      res.send(await getValidHaiku(req.query.text))}
     else {
       res.send({response_type: "in_channel", text: result})
   }}})
