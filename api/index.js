@@ -59,6 +59,7 @@ async function requestHaiku(text) {
   }
   let response = await fetch(process.env.RAPID_API_URL, options)
   let json = await response.json()
+  console.log(json)
   let haiku = json.choices[0].message.content
   
   return smarten(haiku);
