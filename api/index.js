@@ -61,7 +61,6 @@ async function requestHaiku(text) {
   let json = await response.json()
   console.log(json)
   let haiku = json.choices[0].message.content
-  
   return smarten(haiku);
 }
 
@@ -82,7 +81,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     const result = await requestHaiku(req.query.text);
 
     if (!req.query.response_url) {
-      res.send(await getValidHaiku(req.query.text))}
+      res.send(await requestHaiku(req.query.text))}
     else {
       res.send({response_type: "in_channel", text: result})
   }}})
