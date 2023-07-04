@@ -81,7 +81,7 @@ app.get('/api', cors(corsOptions), async (req, res) => {
     const result = await requestHaiku(req.query.text);
 
     if (!req.query.response_url) {
-      res.send(await requestHaiku(req.query.text))}
+      res.send(result)}
     else {
       res.send({response_type: "in_channel", text: result})
   }}})
