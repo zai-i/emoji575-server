@@ -2,40 +2,39 @@ const express = require('express');
 const app = express();
 const port = 3000
 const cors = require('cors')
-const syl = require('syllabificate');
 
 var corsOptions = {
   origin: ['https://emoji575.zaiz.ai', 'https://www.emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
   optionsSuccessStatus: 200 
 }
 
-function validateHaiku(text) {
-  let lines = text?.trim().split(/\r?\n/)
-  let errored = false
+// function validateHaiku(text) {
+//   let lines = text?.trim().split(/\r?\n/)
+//   let errored = false
 
-  if (lines.length !== 3) {
-    errored = true
-  } else {
-    lines.forEach((line, idx) => {
-      line = line.replace('’', '\'')
-      const s = syl.countSyllables(line)
-      const allowed = idx !== 1 ? 5 : 7
-      const isValid = s === allowed
-      if (!isValid) {
-        errored = true
-      }
-    })
-  }
-  return errored;
-}
+//   if (lines.length !== 3) {
+//     errored = true
+//   } else {
+//     lines.forEach((line, idx) => {
+//       line = line.replace('’', '\'')
+//       const s = syl.countSyllables(line)
+//       const allowed = idx !== 1 ? 5 : 7
+//       const isValid = s === allowed
+//       if (!isValid) {
+//         errored = true
+//       }
+//     })
+//   }
+//   return errored;
+// }
 
-async function getValidHaiku(text) {
-  let haiku;
-  do {
-    haiku = await requestHaiku(text)
-  } while (validateHaiku(haiku))
-  return haiku;
-}
+// async function getValidHaiku(text) {
+//   let haiku;
+//   do {
+//     haiku = await requestHaiku(text)
+//   } while (validateHaiku(haiku))
+//   return haiku;
+// }
 
 function smarten(string)  {
   string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
@@ -52,6 +51,7 @@ async function requestHaiku(text) {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_SECRET_KEY}`,
       'X-RapidAPI-Key': process.env.RAPID_API_KEY,
       'X-RapidAPI-Host': process.env.RAPID_API_HOST,
     },
@@ -59,12 +59,9 @@ async function requestHaiku(text) {
   }
   let response = await fetch(process.env.RAPID_API_URL, options)
   let json = await response.json()
-  console.log(json)
   let haiku = json.choices[0].message.content
   return smarten(haiku);
 }
-
-
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv-safe').config()
