@@ -51,6 +51,7 @@ async function requestHaiku(text) {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_SECRET_KEY}`,
       'X-RapidAPI-Key': process.env.RAPID_API_KEY,
       'X-RapidAPI-Host': process.env.RAPID_API_HOST,
     },
