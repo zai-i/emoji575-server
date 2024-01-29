@@ -8,34 +8,6 @@ var corsOptions = {
   optionsSuccessStatus: 200 
 }
 
-// function validateHaiku(text) {
-//   let lines = text?.trim().split(/\r?\n/)
-//   let errored = false
-
-//   if (lines.length !== 3) {
-//     errored = true
-//   } else {
-//     lines.forEach((line, idx) => {
-//       line = line.replace('’', '\'')
-//       const s = syl.countSyllables(line)
-//       const allowed = idx !== 1 ? 5 : 7
-//       const isValid = s === allowed
-//       if (!isValid) {
-//         errored = true
-//       }
-//     })
-//   }
-//   return errored;
-// }
-
-// async function getValidHaiku(text) {
-//   let haiku;
-//   do {
-//     haiku = await requestHaiku(text)
-//   } while (validateHaiku(haiku))
-//   return haiku;
-// }
-
 function smarten(string)  {
   string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
   string = string.replace(/'/g, '\u2019'); // closing singles & apostrophes
@@ -51,16 +23,16 @@ async function requestHaiku(text) {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_SECRET_KEY}`,
       'X-RapidAPI-Key': process.env.RAPID_API_KEY,
       'X-RapidAPI-Host': process.env.RAPID_API_HOST,
     },
-    body: `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content": "Generate a haiku from the following keywords: ${text}."}]}`,
-  }
-  let response = await fetch(process.env.RAPID_API_URL, options)
+    body: `{"prompt": "Generate a haiku from the following keywords: ${text}."}`,
+  };
+
+  const response = await fetch(`${process.env.RAPID_API_URL}`, options)
   let json = await response.json()
-  let haiku = json.choices[0].message.content
-  return smarten(haiku);
+  let haiku = json.content
+  return smarten(haiku)
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -77,11 +49,8 @@ app.get('/api', cors(corsOptions), async (req, res) => {
   else {
     const result = await requestHaiku(req.query.text);
 
-    if (!req.query.response_url) {
-      res.send(result)}
-    else {
-      res.send({response_type: "in_channel", text: result})
-  }}})
+    res.send(result)}
+  })
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)

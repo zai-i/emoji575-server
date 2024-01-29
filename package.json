@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "dev": "nodemon api/index.mjs",
-    "start": "node api/index.mjs"
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
