@@ -32,7 +32,7 @@ async function requestHaiku(text) {
         messages: [
           {
             role: "user",
-            content: `Generate a haiku from the following keywords: ${text}.`
+            content: `Generate a haiku from the following keywords: ${text.match(/[^_\W]+/g).join(' ')}.`
           }
         ]
       })
