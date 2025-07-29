@@ -17,9 +17,11 @@ function smarten(string)  {
   string = string.replace(/--/g, '\u2014'); // em-dashes
 
   return string;
-};
+}
 
 async function requestHaiku(text) {
+  const keywords = (text || "").replace(/[\s,]+/g, " ").trim();
+  console.log(keywords)
   try {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -28,25 +30,23 @@ async function requestHaiku(text) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "moonshotai/kimi-k2:free",
+        model: "google/gemma-3-4b-it:free",
         messages: [
           {
             role: "user",
-            content: `Generate a haiku from the following keywords: ${text.match(/[^_\W]+/g).join(' ')}.`
+            content: `Generate a haiku from the following keywords: ${keywords}.`
           }
         ]
       })
     });
 
     const data = await response.json();
-
-    // Assuming the haiku lives here 👇
-    const haiku = smarten(data.choices?.[0]?.message?.content);
-    console.log(haiku)
-    return haiku || "No haiku found, only silence in the breeze.";
+    console.log(data)
+    const haiku = data.choices?.[0]?.message?.content;
+    return haiku || "No haiku found.";
   } catch (err) {
     console.error("Haiku fetch failed:", err);
-    return "A poem was lost... blown away by error winds.";
+    return "Error.";
   }
 }
 
