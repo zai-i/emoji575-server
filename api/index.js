@@ -4,9 +4,10 @@ const port = 3000
 const cors = require('cors')
 
 var corsOptions = {
-  origin: ['https://emoji575.zaiz.ai', 'https://www.emoji575.zaiz.ai', 'http://127.0.0.1:5173', 'http://localhost:5173'],
+  origin: ['https://emoji575.suddenghazals.com', 'https://www.emoji575.suddenghazals.com', 'http://127.0.0.1:5173', 'http://localhost:5173'],
   optionsSuccessStatus: 200 
 }
+
 
 function smarten(string)  {
   string = string.replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018'); // opening singles
@@ -19,20 +20,34 @@ function smarten(string)  {
 };
 
 async function requestHaiku(text) {
-  const options = {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': process.env.RAPID_API_KEY,
-      'X-RapidAPI-Host': process.env.RAPID_API_HOST,
-    },
-    body: `{"prompt": "Generate a haiku from the following keywords: ${text}."}`,
-  };
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "moonshotai/kimi-k2:free",
+        messages: [
+          {
+            role: "user",
+            content: `Generate a haiku from the following keywords: ${text}.`
+          }
+        ]
+      })
+    });
 
-  const response = await fetch(`${process.env.RAPID_API_URL}`, options)
-  let json = await response.json()
-  let haiku = json.content
-  return smarten(haiku)
+    const data = await response.json();
+
+    // Assuming the haiku lives here 👇
+    const haiku = smarten(data.choices?.[0]?.message?.content);
+
+    return haiku || "No haiku found, only silence in the breeze.";
+  } catch (err) {
+    console.error("Haiku fetch failed:", err);
+    return "A poem was lost... blown away by error winds.";
+  }
 }
 
 if (process.env.NODE_ENV !== 'production') {
