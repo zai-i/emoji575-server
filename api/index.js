@@ -4,7 +4,7 @@ const port = 3000
 const cors = require('cors')
 
 var corsOptions = {
-  origin: ['https://emoji575.suddenghazals.com', 'https://www.emoji575.suddenghazals.com', 'http://127.0.0.1:5173', 'http://localhost:5173'],
+  origin: ['https://emoji575.suddenghazals.com', 'https://www.emoji575.suddenghazals.com', 'http://emoji575.netlify.app/'],
   optionsSuccessStatus: 200 
 }
 
@@ -42,7 +42,7 @@ async function requestHaiku(text) {
 
     // Assuming the haiku lives here 👇
     const haiku = smarten(data.choices?.[0]?.message?.content);
-
+    console.log(haiku)
     return haiku || "No haiku found, only silence in the breeze.";
   } catch (err) {
     console.error("Haiku fetch failed:", err);
